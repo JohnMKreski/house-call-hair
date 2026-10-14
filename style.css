@@ -604,7 +604,9 @@ footer a {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity .7s ease,transform .7s ease;
+  transition-delay: calc(var(--i, 0) * 120ms);
 }
+
 .reveal.in {
   opacity: 1;
   transform: none;
