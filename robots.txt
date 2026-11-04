@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://housecallhair.com/sitemap.xml

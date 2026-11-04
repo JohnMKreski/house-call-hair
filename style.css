@@ -30,6 +30,7 @@ body {
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 a {
   color: inherit;
@@ -62,9 +63,11 @@ h1,h2,h3 {
   margin: 0;
   text-wrap: balance;
 }
-p {
-  margin: 0;
-  text-wrap: pretty;
+.hero h1 { margin-top: 0; }
+.hero h1 .eyebrow {
+  display: block;
+  margin-bottom: 22px;
+  font-style: normal;
 }
 .eyebrow {
   font: 700 .75rem/1 var(--sans);
@@ -72,6 +75,11 @@ p {
   text-transform: uppercase;
   color: var(--blue);
 }
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
 /* header */
 header {
   position: sticky;
@@ -870,7 +878,7 @@ nav ul .btn {
     display: flex;
   }
   nav ul {
-    display: none;
+    display: flex;
     position: absolute;
     top: 100%;
     left: 0;
@@ -882,10 +890,41 @@ nav ul .btn {
     background: var(--paper);
     border-bottom: 1px solid var(--line);
     box-shadow: 0 18px 40px rgba(0,0,0,.08);
+    /* closed state */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    pointer-events: none;
+    transition:
+      opacity .3s ease,
+      transform .4s cubic-bezier(.22,1,.36,1),
+      visibility 0s linear .4s;
   }
   nav ul.open {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    transition:
+      opacity .35s ease,
+      transform .5s cubic-bezier(.22,1,.36,1),
+      visibility 0s;
   }
+  /* menu items fade and rise in one after another */
+  nav ul li {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  nav ul.open li {
+    opacity: 1;
+    transform: none;
+    transition: opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1);
+  }
+  nav ul.open li:nth-child(1) { transition-delay: .06s; }
+  nav ul.open li:nth-child(2) { transition-delay: .12s; }
+  nav ul.open li:nth-child(3) { transition-delay: .18s; }
+  nav ul.open li:nth-child(4) { transition-delay: .24s; }
   nav ul a:not(.btn) {
     display: block;
     padding: 14px 0;
@@ -894,6 +933,13 @@ nav ul .btn {
   nav ul .btn {
     margin-top: 18px;
     justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nav ul,
+  nav ul li {
+    transition: none !important;
   }
 }
 
