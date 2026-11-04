@@ -296,21 +296,60 @@ nav a:not(.btn):hover {
   grid-template-columns: repeat(3,1fr);
   gap: 24px;
 }
-.svc {
+
+.svc::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--ink);
+  border-radius: 14px 14px 14px 14px;
+  z-index: -1;
+  opacity: 0;
+  transition: inset .6s ease, opacity .6s ease, border-radius .6s ease;
+}
+/* expand the outline out from behind the card evenly on every side */
+.svc:hover::before {
+  inset: -12px;
+  /* card radius + spread, so the corners stay concentric with the card */
+  border-radius: 26px;
+  opacity: 1;
+}
+/* card's white fill, layered above the outline so the line only shows outside the card */
+.svc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: #ffffff;
+  border-radius: 15px;
+  z-index: -1;
+}
+
+.svc {
+  position: relative;
+  isolation: isolate;
   border-radius: 16px;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
-  transition: transform .25s,box-shadow .25s;
+  transition: translate .6s ease, box-shadow .6s ease;
 }
+/* .reveal's transition would otherwise replace the one above, so restate it with the hover properties */
+.svc.reveal {
+  transition:
+    opacity .7s ease calc(var(--i, 0) * 120ms),
+    transform .7s ease calc(var(--i, 0) * 120ms),
+    translate .6s ease,
+    box-shadow .6s ease;
+}
+/* lift up and to the left, away from the outline sliding down and right */
 .svc:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 44px rgba(0,0,0,.08);
+  /* translate: -6px -6px; */
+  /* soft, even shadow that stays inside the outline on every side; slight downward offset for depth */
+  box-shadow: 0 6px 20px -6px rgba(0,0,0,.14);
 }
 .svc img {
   width: 100%;
+  border-radius: 15px 15px 0 0;
   aspect-ratio: 4/3.4;
   object-fit: cover;
   object-position: center 25%;
@@ -456,12 +495,36 @@ nav a:not(.btn):hover {
   gap: clamp(40px,6vw,88px);
   align-items: center;
 }
+.about-img {
+  position: relative;
+  isolation: isolate;
+}
+.about-img::before {
+  content: "";
+  position: absolute;
+  inset: 18px -18px -18px 18px;
+  border: 1px solid var(--ink);
+  border-radius: 14px 14px 1400px 140px;
+  z-index: -1;
+  transition: inset .6s ease;
+}
 .about-img img {
+  display: block;
   width: 100%;
   aspect-ratio: 4/5;
   object-fit: cover;
   object-position: center 20%;
-  border-radius: 14px 14px 140px 140px;
+  border-radius: 14px 14px 1400px 140px;
+  /* filter: grayscale(1) contrast(1.08) brightness(1.02); */
+  box-shadow: 0 24px 50px -28px rgba(0,0,0,.45);
+  transition: filter .6s ease, transform .6s ease;
+}
+.about-img:hover img {
+  /* filter: grayscale(1) contrast(1.15) brightness(1.04); */
+  transform: translateY(-4px);
+}
+.about-img:hover::before {
+  inset: 10px -10px -10px 10px;
 }
 .about-copy {
   display: flex;
@@ -534,7 +597,42 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px;
-  box-shadow: 0 24px 60px rgba(0,0,0,.06);
+  position: relative;
+  isolation: isolate;
+  transition: translate .6s ease, box-shadow .6s ease;
+}
+/* outline hidden behind the form at rest, matching the service cards */
+form::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--ink);
+  border-radius: 18px;
+  z-index: -1;
+  opacity: 0;
+  transition: inset .6s ease, opacity .6s ease;
+}
+/* on hover (or while filling it in), slide the outline out down-left and cast the shadow into that gap */
+form:hover,
+form:focus-within {
+  /* lift up and to the right, away from the outline sliding down and left */
+  translate: 6px -6px;
+  /* negative spread keeps the shadow off the top/right */
+  box-shadow: -10px 10px 22px -6px rgba(0,0,0,.12);
+}
+form:hover::before,
+form:focus-within::before {
+  inset: 18px 18px -18px -18px;
+  opacity: 1;
+}
+/* form's white fill, layered above the outline so the line only shows outside the form */
+form::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  border-radius: 17px;
+  z-index: -1;
 }
 .field {
   display: grid;
