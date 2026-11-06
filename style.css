@@ -142,9 +142,24 @@ nav a {
   font-weight: 500;
   font-size: .95rem;
 }
-nav a:not(.btn):hover {
-  color: var(--blue);
+
+nav a:not(.btn) { 
+  position: relative; 
 }
+nav a:not(.btn)::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0); 
+  transition: transform .3s ease; 
+}
+nav a:not(.btn):hover::after {
+  transform: scaleX(1);
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -261,6 +276,7 @@ nav a:not(.btn):hover {
   object-fit: cover;
   object-position: center 8%;
   border-radius: 140px 140px 14px 14px;
+  box-shadow: 0 6px 20px -6px rgba(0,0,0,.25);
 }
 .hero-badge {
   position: absolute;
@@ -514,33 +530,53 @@ nav a:not(.btn):hover {
   position: relative;
   isolation: isolate;
 }
+
+@property --sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.about-img.in::before {
+  --sweep: 180deg;
+  inset: -10px;
+}
+
 .about-img::before {
   content: "";
   position: absolute;
-  inset: 18px -18px -18px 18px;
+  inset: 10px 10px 10px 10px;
   border: 1px solid var(--ink);
-  border-radius: 14px 14px 1400px 140px;
+  border-color: color-mix(in srgb, var(--ink) 40%, transparent); 
+
+  border-radius: 14px 14px 140px 140px;
   z-index: -1;
-  transition: inset .6s ease;
+  /* transition: inset .6s ease; */
+  
+  -webkit-mask: conic-gradient(#000 var(--sweep), transparent 0);
+        mask: conic-gradient(#000 var(--sweep),
+          transparent 0 calc(360deg - var(--sweep)),
+        #000 0);
+  transition:
+    --sweep 1.4s cubic-bezier(.65, 0, .35, 1) .5s,
+    inset   1s   cubic-bezier(.22, 1, .36, 1) .5s;
 }
 .about-img img {
   display: block;
   width: 100%;
   aspect-ratio: 4/5;
   object-fit: cover;
-  object-position: center 20%;
-  border-radius: 14px 14px 1400px 140px;
+  object-position: center;
+  border-radius: 14px 14px 140px 140px;
   /* filter: grayscale(1) contrast(1.08) brightness(1.02); */
-  box-shadow: 0 24px 50px -28px rgba(0,0,0,.45);
+  box-shadow: 0 6px 20px -6px rgba(0,0,0,.45);
   transition: filter .6s ease, transform .6s ease;
 }
-.about-img:hover img {
-  /* filter: grayscale(1) contrast(1.15) brightness(1.04); */
-  transform: translateY(-4px);
-}
-.about-img:hover::before {
-  inset: 10px -10px -10px 10px;
-}
+/* .about-img:hover img {
+  transform: translateY(-0px);
+} */
+/* .about-img:hover::before {
+  inset: -18px -18px -18px -18px;
+} */
 .about-copy {
   display: flex;
   flex-direction: column;
@@ -622,6 +658,7 @@ form::before {
   position: absolute;
   inset: 0;
   border: 1px solid var(--ink);
+  border-color: color-mix(in srgb, var(--ink) 40%, transparent); 
   border-radius: 18px;
   z-index: -1;
   opacity: 0;
@@ -631,13 +668,13 @@ form::before {
 form:hover,
 form:focus-within {
   /* lift up and to the right, away from the outline sliding down and left */
-  translate: 6px -6px;
+  /* translate: 6px -6px; */
   /* negative spread keeps the shadow off the top/right */
-  box-shadow: -10px 10px 22px -6px rgba(0,0,0,.12);
+  box-shadow: 0px 6px 20px -6px rgba(0,0,0,.12);
 }
 form:hover::before,
 form:focus-within::before {
-  inset: 18px 18px -18px -18px;
+  inset: -10px -10px -10px -10px;
   opacity: 1;
 }
 /* form's white fill, layered above the outline so the line only shows outside the form */
