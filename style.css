@@ -333,6 +333,7 @@ nav a:not(.btn):hover::after {
   position: absolute;
   inset: 0;
   border: 1px solid var(--ink);
+  border-color: color-mix(in srgb, var(--ink) 40%, transparent); 
   border-radius: 14px 14px 14px 14px;
   z-index: -1;
   opacity: 0;
